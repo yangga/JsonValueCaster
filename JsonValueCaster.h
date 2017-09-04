@@ -15,7 +15,7 @@ namespace Json {
 
 	namespace detail {
 
-		template <typename T> static T valueAs(Json::Value const& v) { static_assert(0, "invalid type"); }
+		template <typename T> static T valueAs(Json::Value const& v) { static_assert(0 > sizeof(T), "invalid type"); }
 		template <> static int8_t valueAs(Json::Value const& v) { return static_cast<int8_t>(v.asInt()); }
 		template <> static uint8_t valueAs(Json::Value const& v) { return static_cast<uint8_t>(v.asInt()); }
 		template <> static int16_t valueAs(Json::Value const& v) { return static_cast<int16_t>(v.asInt()); }
