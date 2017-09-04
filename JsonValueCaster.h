@@ -11,27 +11,29 @@
 #include <boost/utility/string_ref.hpp>
 #endif
 
+#include <stdint.h>
+
 namespace Json {
 
 	namespace detail {
 
 		template <typename T> static T valueAs(Json::Value const& v) { static_assert(0 > sizeof(T), "invalid type"); }
-		template <> static int8_t valueAs(Json::Value const& v) { return static_cast<int8_t>(v.asInt()); }
-		template <> static uint8_t valueAs(Json::Value const& v) { return static_cast<uint8_t>(v.asInt()); }
-		template <> static int16_t valueAs(Json::Value const& v) { return static_cast<int16_t>(v.asInt()); }
-		template <> static uint16_t valueAs(Json::Value const& v) { return static_cast<uint16_t>(v.asInt()); }
-		template <> static Value::Int valueAs(Json::Value const& v) { return v.asInt(); }
-		template <> static Value::UInt valueAs(Json::Value const& v) { return v.asUInt(); }
-		template <> static Value::LargestInt valueAs(Json::Value const& v) { return v.asLargestInt(); }
-		template <> static Value::LargestUInt valueAs(Json::Value const& v) { return v.asLargestUInt(); }
-		template <> static float valueAs(Json::Value const& v) { return v.asFloat(); }
-		template <> static double valueAs(Json::Value const& v) { return v.asDouble(); }
-		template <> static bool valueAs(Json::Value const& v) { return v.asBool(); }
-		template <> static std::string valueAs(Json::Value const& v) { return std::move(v.asString()); }
-		template <> static const char* valueAs(Json::Value const& v) { return v.asCString(); }
+		template <> int8_t valueAs(Json::Value const& v) { return static_cast<int8_t>(v.asInt()); }
+		template <> uint8_t valueAs(Json::Value const& v) { return static_cast<uint8_t>(v.asInt()); }
+		template <> int16_t valueAs(Json::Value const& v) { return static_cast<int16_t>(v.asInt()); }
+		template <> uint16_t valueAs(Json::Value const& v) { return static_cast<uint16_t>(v.asInt()); }
+		template <> Value::Int valueAs(Json::Value const& v) { return v.asInt(); }
+		template <> Value::UInt valueAs(Json::Value const& v) { return v.asUInt(); }
+		template <> Value::LargestInt valueAs(Json::Value const& v) { return v.asLargestInt(); }
+		template <> Value::LargestUInt valueAs(Json::Value const& v) { return v.asLargestUInt(); }
+		template <> float valueAs(Json::Value const& v) { return v.asFloat(); }
+		template <> double valueAs(Json::Value const& v) { return v.asDouble(); }
+		template <> bool valueAs(Json::Value const& v) { return v.asBool(); }
+		template <> std::string valueAs(Json::Value const& v) { return std::move(v.asString()); }
+		template <> const char* valueAs(Json::Value const& v) { return v.asCString(); }
 
 #ifdef USE_BOOST_STRING_REF
-		template <> static boost::string_ref valueAs(Json::Value const& v) {
+		template <> boost::string_ref valueAs(Json::Value const& v) {
 			const char* txt = v.asCString();
 			if (nullptr == txt)
 				return boost::string_ref();
@@ -115,7 +117,7 @@ namespace Json {
 	{
 	public:
 		explicit Caster(Json::Value const& node)
-			: node_(node) {}
+				: node_(node) {}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
 		inline T get(KEY_TYPE key, KEY_TYPES... elses) {
