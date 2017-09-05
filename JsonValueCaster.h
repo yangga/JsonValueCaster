@@ -130,4 +130,32 @@ namespace Json {
 		Json::Value const& node_;
 	};
 
+	class CasterCoverDef
+	{
+	public:
+		explicit CasterCoverDef(Json::Value const& node)
+				: node_(node) {}
+
+		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
+		inline T get(KEY_TYPE key, T const& defaultValue, KEY_TYPES... elses) const {
+            try {
+			    return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
+            } catch(...) {
+                return defaultValue;
+            }
+		}
+
+		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
+		inline T get(KEY_TYPE key, T && defaultValue, KEY_TYPES... elses) const {
+            try {
+			    return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
+            } catch(...) {
+                return defaultValue;
+            }
+		}
+
+	private:
+		Json::Value const& node_;
+    }
+
 }	// namespace Json
