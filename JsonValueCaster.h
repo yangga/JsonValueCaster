@@ -120,7 +120,7 @@ namespace Json {
 				: node_(node) {}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
-		inline T get(KEY_TYPE key, KEY_TYPES... elses) {
+		inline T get(KEY_TYPE key, KEY_TYPES... elses) const {
 			return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
 		}
 
