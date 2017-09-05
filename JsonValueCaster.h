@@ -156,6 +156,6 @@ namespace Json {
 
 	private:
 		Json::Value const& node_;
-    }
+    };
 
 }	// namespace Json
