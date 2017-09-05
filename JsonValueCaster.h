@@ -25,7 +25,9 @@ namespace Json {
 		template <> Value::Int valueAs(Json::Value const& v) { return v.asInt(); }
 		template <> Value::UInt valueAs(Json::Value const& v) { return v.asUInt(); }
 		template <> Value::LargestInt valueAs(Json::Value const& v) { return v.asLargestInt(); }
+		template <> long valueAs(Json::Value const& v) { return static_cast<long>(v.asLargestInt()); }
 		template <> Value::LargestUInt valueAs(Json::Value const& v) { return v.asLargestUInt(); }
+		template <> unsigned long valueAs(Json::Value const& v) { return static_cast<unsigned long>(v.asLargestUInt()); }
 		template <> float valueAs(Json::Value const& v) { return v.asFloat(); }
 		template <> double valueAs(Json::Value const& v) { return v.asDouble(); }
 		template <> bool valueAs(Json::Value const& v) { return v.asBool(); }
