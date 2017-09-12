@@ -9,6 +9,8 @@
 
 int main()
 {
+	/// testing normal case
+	std::cout << "= testing normal ===================================" << std::endl;
 	Json::Value vMe;
 	vMe["id"] = 1000;
 	vMe["name"] = "Yangga";
@@ -53,6 +55,19 @@ int main()
 	catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 	}
+
+	/// testing boolean
+	std::cout << "= testing boolean ===================================" << std::endl;
+
+	Json::Value vBooleanTest;
+	vBooleanTest["boolean"] = true;
+	vBooleanTest["string"] = "true";
+	vBooleanTest["number"] = 1;
+
+	Json::CasterBoolean cb(vBooleanTest);
+	std::cout << "case boolean - " << cb.get("boolean", false) << std::endl;
+	std::cout << "case string - " << cb.get("string", false) << std::endl;
+	std::cout << "case number - " << cb.get("number", false) << std::endl;
 
     return 0;
 }

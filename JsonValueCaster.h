@@ -11,6 +11,8 @@
 #include <boost/utility/string_ref.hpp>
 #endif
 
+#include <algorithm>
+
 #include <stdint.h>
 
 namespace Json {
@@ -119,7 +121,7 @@ namespace Json {
 	{
 	public:
 		explicit Caster(Json::Value const& node)
-				: node_(node) {}
+			: node_(node) {}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
 		inline T get(KEY_TYPE key, KEY_TYPES... elses) const {
@@ -134,28 +136,74 @@ namespace Json {
 	{
 	public:
 		explicit CasterCoverDef(Json::Value const& node)
-				: node_(node) {}
+			: node_(node) {}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
 		inline T get(KEY_TYPE key, T const& defaultValue, KEY_TYPES... elses) const {
-            try {
-			    return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
-            } catch(...) {
-                return defaultValue;
-            }
+			try {
+				return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
+			}
+			catch (...) {
+				return defaultValue;
+			}
 		}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
 		inline T get(KEY_TYPE key, T && defaultValue, KEY_TYPES... elses) const {
-            try {
-			    return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
-            } catch(...) {
-                return defaultValue;
-            }
+			try {
+				return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
+			}
+			catch (...) {
+				return defaultValue;
+			}
 		}
 
 	private:
 		Json::Value const& node_;
-    };
+	};
+
+	class CasterBoolean
+	{
+	public:
+		explicit CasterBoolean(Json::Value const& node)
+			: node_(node) {}
+
+		template <typename KEY_TYPE = const char*>
+		inline bool get(KEY_TYPE key, bool const defaultValue=false) const {
+			/// case - value is boolean type
+			try {
+				return CasterStatic::Get<bool>(node_, key);
+			}
+			catch (...) {}
+
+			/// case - value is string type
+			try {
+				auto v = CasterStatic::Get<std::string>(node_, key);
+				std::transform(v.begin(), v.end(), v.begin(), ::tolower);
+
+				if (v == "true")
+					return true;
+
+				return false;
+
+			}
+			catch (...) {}
+
+			/// case - value is number type
+			try {
+				auto const v = CasterStatic::Get<int>(node_, key);
+				if (0 == v)
+					return false;
+
+				return true;
+			}
+			catch (...) {}
+
+			return defaultValue;
+		}
+
+	private:
+		Json::Value const& node_;
+	};
 
 }	// namespace Json
