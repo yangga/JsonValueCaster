@@ -63,7 +63,7 @@ namespace Json {
 
 			auto& vNodeSub = node[key];
 			if (vNodeSub.isNull()) {
-				return T();
+				throw std::invalid_argument("node is null");
 			}
 
 			return detail::valueAs<T>(vNodeSub);
@@ -139,7 +139,7 @@ namespace Json {
 			: node_(node) {}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
-		inline T get(KEY_TYPE key, T const& defaultValue, KEY_TYPES... elses) const {
+		inline T get(T const& defaultValue, KEY_TYPE key, KEY_TYPES... elses) const {
 			try {
 				return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
 			}
@@ -149,7 +149,7 @@ namespace Json {
 		}
 
 		template <typename T, typename KEY_TYPE = const char*, typename... KEY_TYPES>
-		inline T get(KEY_TYPE key, T && defaultValue, KEY_TYPES... elses) const {
+		inline T get(T && defaultValue, KEY_TYPE key, KEY_TYPES... elses) const {
 			try {
 				return CasterStatic::Get<T>(node_, key, std::forward<KEY_TYPES>(elses)...);
 			}
